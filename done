@@ -1,0 +1,10 @@
+SELECT a.user_id as user_id_left,
+       b.user_id as user_id_right,
+       order_id,
+       time,
+       action,
+       sex,
+       birth_date
+FROM   user_actions a
+    LEFT JOIN users b using (user_id)
+ORDER BY user_id_left
