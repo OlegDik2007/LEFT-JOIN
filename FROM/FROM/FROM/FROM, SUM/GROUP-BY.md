@@ -14,3 +14,18 @@ WHERE  order_id not in (SELECT order_id
                         WHERE  action = 'cancel_order')
 GROUP BY date
 ORDER BY date
+
+
+****************************
+SELECT date(creation_time) as date,
+       sum(price) as revenue
+FROM   (SELECT order_id,
+               creation_time,
+               product_ids,
+               unnest(product_ids) as product_id
+        FROM   orders
+        WHERE  order_id not in (SELECT order_id
+                                FROM   user_actions
+                                WHERE  action = 'cancel_order')) t1
+    LEFT JOIN products using(product_id)
+GROUP BY date
