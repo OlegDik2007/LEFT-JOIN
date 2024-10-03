@@ -1,0 +1,15 @@
+SELECT name,
+       count(product_id) as times_purchased
+FROM   (SELECT order_id,
+               product_id,
+               name
+        FROM   (SELECT DISTINCT order_id,
+                                unnest(product_ids) as product_id
+                FROM   orders
+                    LEFT JOIN courier_actions using (order_id)
+                WHERE  action = 'deliver_order'
+                   and date_part('month', time) = 9
+                   and date_part('year', time) = 2022) t1
+            LEFT JOIN products using (product_id)) t2
+GROUP BY name
+ORDER BY times_purchased desc limit 10
